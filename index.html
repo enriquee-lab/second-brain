@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Second Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="ledger-rail"></div>
+
+  <header class="topbar">
+    <h1>Second Brain</h1>
+    <p class="subtitle">Deine Notizen, durchsuchbar an einem Ort.</p>
+  </header>
+
+  <main class="page">
+
+    <section class="composer" aria-label="Neue Notiz anlegen">
+      <input id="title-input" type="text" placeholder="Titel" maxlength="80">
+      <textarea id="content-input" placeholder="Was möchtest du festhalten?" rows="3"></textarea>
+      <div class="composer-row">
+        <input id="tags-input" type="text" placeholder="Tags, mit Komma getrennt (z.B. uni, idee)">
+        <button id="add-btn">Notiz speichern</button>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Suche und Filter">
+      <input id="search-input" type="text" placeholder="Notizen durchsuchen…">
+      <div id="tag-filters" class="tag-filters"></div>
+    </section>
+
+    <section id="notes-grid" class="notes-grid" aria-label="Notizen"></section>
+
+    <p id="empty-state" class="empty-state" hidden>
+      Noch keine Notizen. Leg oben deine erste an.
+    </p>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
