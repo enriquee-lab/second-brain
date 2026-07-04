@@ -1,13 +1,19 @@
 const STORAGE_KEY = 'second-brain-notes';
+const API_KEY_STORAGE = 'second-brain-gemini-key';
 
 const titleInput = document.getElementById('title-input');
 const contentInput = document.getElementById('content-input');
 const tagsInput = document.getElementById('tags-input');
 const addBtn = document.getElementById('add-btn');
+const autotagBtn = document.getElementById('autotag-btn');
 const searchInput = document.getElementById('search-input');
 const tagFiltersEl = document.getElementById('tag-filters');
 const notesGrid = document.getElementById('notes-grid');
 const emptyState = document.getElementById('empty-state');
+const settingsBtn = document.getElementById('settings-btn');
+const settingsPanel = document.getElementById('settings-panel');
+const keyInput = document.getElementById('key-input');
+const saveKeyBtn = document.getElementById('save-key-btn');
 
 let notes = loadNotes();
 let activeTag = null;
@@ -123,7 +129,13 @@ function renderNotes() {
       tagsWrap.appendChild(span);
     });
 
-    card.append(del, h3, p, tagsWrap);
+    const meta = document.createElement('div');
+    meta.className = 'note-meta';
+    meta.textContent = new Date(note.createdAt).toLocaleDateString('de-DE', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+
+    card.append(del, h3, p, tagsWrap, meta);
     notesGrid.appendChild(card);
   });
 }
@@ -133,7 +145,93 @@ function render() {
   renderNotes();
 }
 
+// --- KI-Einstellungen (API-Key) ---
+
+function getApiKey() {
+  return localStorage.getItem(API_KEY_STORAGE) || '';
+}
+
+function toggleSettings() {
+  settingsPanel.hidden = !settingsPanel.hidden;
+  if (!settingsPanel.hidden) {
+    keyInput.value = getApiKey();
+    keyInput.focus();
+  }
+}
+
+function saveApiKey() {
+  const key = keyInput.value.trim();
+  if (key) {
+    localStorage.setItem(API_KEY_STORAGE, key);
+    saveKeyBtn.textContent = '✓ Gespeichert';
+    setTimeout(() => {
+      saveKeyBtn.textContent = 'Speichern';
+      settingsPanel.hidden = true;
+    }, 1200);
+  } else {
+    localStorage.removeItem(API_KEY_STORAGE);
+    settingsPanel.hidden = true;
+  }
+}
+
+// --- KI-Auto-Tagging via Gemini ---
+
+async function suggestTags() {
+  const key = getApiKey();
+  if (!key) {
+    alert('Bitte zuerst deinen Gemini-API-Key unter "⚙ KI" speichern.');
+    toggleSettings();
+    return;
+  }
+
+  const title = titleInput.value.trim();
+  const content = contentInput.value.trim();
+  if (!title && !content) {
+    alert('Schreib zuerst einen Titel oder Inhalt, dann kann die KI Tags vorschlagen.');
+    return;
+  }
+
+  autotagBtn.disabled = true;
+  autotagBtn.textContent = '…';
+
+  const prompt =
+    'Schlage 3 bis 5 kurze, thematische Tags fuer die folgende Notiz vor. ' +
+    'Regeln: einzelne Woerter, kleingeschrieben, auf Deutsch. ' +
+    'Antworte NUR mit den Tags, kommagetrennt, ohne weitere Erklaerung.\n\n' +
+    'Titel: ' + title + '\nInhalt: ' + content;
+
+  try {
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      }
+    );
+
+    if (!res.ok) throw new Error('API-Fehler ' + res.status);
+
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const suggested = parseTags(text.replace(/\n/g, ' '));
+
+    if (suggested.length === 0) throw new Error('Keine Tags in der Antwort');
+
+    const merged = [...new Set([...parseTags(tagsInput.value), ...suggested])];
+    tagsInput.value = merged.join(', ');
+  } catch (e) {
+    alert('Konnte keine Tags erzeugen: ' + e.message);
+  } finally {
+    autotagBtn.disabled = false;
+    autotagBtn.textContent = '✨ Tags';
+  }
+}
+
 addBtn.addEventListener('click', addNote);
+autotagBtn.addEventListener('click', suggestTags);
+settingsBtn.addEventListener('click', toggleSettings);
+saveKeyBtn.addEventListener('click', saveApiKey);
 searchInput.addEventListener('input', renderNotes);
 
 [titleInput, tagsInput].forEach(el =>

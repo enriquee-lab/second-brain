@@ -10,11 +10,30 @@
 </head>
 <body>
 
-  <div class="ledger-rail"></div>
-
   <header class="topbar">
-    <h1>Second Brain</h1>
-    <p class="subtitle">Deine Notizen, durchsuchbar an einem Ort.</p>
+    <div class="topbar-head">
+      <div class="title-block">
+        <div class="page-icon" aria-hidden="true">🧠</div>
+        <h1>Second Brain</h1>
+        <p class="subtitle">Alles, was du festhalten willst — an einem Ort, sofort durchsuchbar.</p>
+      </div>
+      <button id="settings-btn" type="button" aria-label="KI-Einstellungen">
+        <span aria-hidden="true">✨</span> KI
+      </button>
+    </div>
+
+    <div id="settings-panel" class="settings-panel" hidden>
+      <label for="key-input">Gemini API-Key (nur lokal in deinem Browser gespeichert)</label>
+      <div class="settings-row">
+        <input id="key-input" type="password" placeholder="AIza… hier einfügen" autocomplete="off">
+        <button id="save-key-btn" type="button">Speichern</button>
+      </div>
+      <p class="settings-hint">
+        Kostenlos ohne Kreditkarte erstellen bei
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>.
+        Der Key verlässt deinen Browser nicht und landet nie im Repo.
+      </p>
+    </div>
   </header>
 
   <main class="page">
@@ -24,6 +43,7 @@
       <textarea id="content-input" placeholder="Was möchtest du festhalten?" rows="3"></textarea>
       <div class="composer-row">
         <input id="tags-input" type="text" placeholder="Tags, mit Komma getrennt (z.B. uni, idee)">
+        <button id="autotag-btn" type="button" class="autotag-btn" title="Tags per KI vorschlagen">✨ Tags</button>
         <button id="add-btn">Notiz speichern</button>
       </div>
     </section>
