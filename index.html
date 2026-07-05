@@ -15,7 +15,7 @@
       <div class="title-block">
         <div class="page-icon" aria-hidden="true">🧠</div>
         <h1>Second Brain</h1>
-        <p class="subtitle">Alles, was du festhalten willst — an einem Ort, sofort durchsuchbar.</p>
+        <p class="subtitle">Festhalten, ordnen, verdichten, nutzen — dein Wissen an einem Ort, sofort durchsuchbar und mit KI abfragbar.</p>
       </div>
       <button id="settings-btn" type="button" aria-label="KI-Einstellungen">
         <span aria-hidden="true">✨</span> KI
@@ -38,26 +38,63 @@
 
   <main class="page">
 
+    <!-- ===== CAPTURE — Gedanken festhalten ===== -->
     <section class="composer" aria-label="Neue Notiz anlegen">
-      <input id="title-input" type="text" placeholder="Titel" maxlength="80">
+      <div id="edit-banner" class="edit-banner" hidden>
+        <span>Notiz wird bearbeitet</span>
+        <button id="cancel-edit-btn" type="button">Abbrechen</button>
+      </div>
+      <input id="title-input" type="text" placeholder="Titel" maxlength="120">
       <textarea id="content-input" placeholder="Was möchtest du festhalten?" rows="3"></textarea>
       <div class="composer-row">
+        <select id="para-input" class="para-select" aria-label="Kategorie (PARA)">
+          <option value="">Kategorie…</option>
+          <option value="projekt">Projekt</option>
+          <option value="bereich">Bereich</option>
+          <option value="ressource">Ressource</option>
+          <option value="archiv">Archiv</option>
+        </select>
         <input id="tags-input" type="text" placeholder="Tags, mit Komma getrennt (z.B. uni, idee)">
         <button id="autotag-btn" type="button" class="autotag-btn" title="Tags per KI vorschlagen">✨ Tags</button>
         <button id="add-btn">Notiz speichern</button>
       </div>
     </section>
 
+    <!-- ===== EXPRESS — dein Wissen abfragen ===== -->
+    <section class="ask" aria-label="Second Brain befragen">
+      <div class="ask-row">
+        <input id="ask-input" type="text" placeholder="Frag dein Second Brain … z.B. „Was habe ich über Prozessautomatisierung notiert?“">
+        <button id="ask-btn" class="ask-btn" type="button">✨ Fragen</button>
+      </div>
+      <div id="ask-answer" class="ask-answer" hidden>
+        <button id="ask-close" class="ask-close" type="button" aria-label="Antwort schließen">✕</button>
+        <div id="ask-answer-body" class="ask-answer-body"></div>
+      </div>
+    </section>
+
+    <!-- ===== ORGANIZE — suchen & filtern ===== -->
     <section class="toolbar" aria-label="Suche und Filter">
       <input id="search-input" type="text" placeholder="Notizen durchsuchen…">
+      <div id="para-filters" class="para-filters"></div>
       <div id="tag-filters" class="tag-filters"></div>
     </section>
 
     <section id="notes-grid" class="notes-grid" aria-label="Notizen"></section>
 
-    <p id="empty-state" class="empty-state" hidden>
-      Noch keine Notizen. Leg oben deine erste an.
-    </p>
+    <div id="empty-state" class="empty-state" hidden>
+      <div class="empty-icon" aria-hidden="true">🧠</div>
+      <p id="empty-text">Noch keine Notizen. Leg oben deine erste an.</p>
+    </div>
+
+    <!-- ===== Datenhoheit — Export / Import ===== -->
+    <footer class="data-bar">
+      <span class="data-info"><span id="note-count">0</span> Notizen · lokal auf deinem Gerät</span>
+      <div class="data-actions">
+        <button id="export-btn" type="button" class="ghost-btn">Export (JSON)</button>
+        <button id="import-btn" type="button" class="ghost-btn">Import</button>
+        <input id="import-file" type="file" accept="application/json,.json" hidden>
+      </div>
+    </footer>
 
   </main>
 

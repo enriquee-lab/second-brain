@@ -22,6 +22,16 @@
   --tag-bg: #ecebe7;
   --tag-text: #5b5850;
 
+  /* PARA-Kategorien (Building a Second Brain) */
+  --para-projekt: #b45309;
+  --para-projekt-bg: #fbf1e5;
+  --para-bereich: #2f6fb0;
+  --para-bereich-bg: #eaf1f9;
+  --para-ressource: #3f7d58;
+  --para-ressource-bg: #e9f3ec;
+  --para-archiv: #6f6c65;
+  --para-archiv-bg: #eeedea;
+
   --radius: 10px;
   --radius-lg: 14px;
   --radius-pill: 999px;
@@ -419,9 +429,251 @@ button { font-family: inherit; }
   color: var(--text-faint);
 }
 
-.delete-btn {
+.card-actions {
   position: absolute;
-  top: 12px;
+  top: 10px;
+  right: 8px;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+}
+
+.note-card:hover .card-actions,
+.card-actions:focus-within { opacity: 1; }
+
+/* Angepinnte Notiz: Pin bleibt sichtbar, auch ohne Hover */
+.note-card.pinned .pin-btn { opacity: 1; }
+
+.icon-btn {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: color 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+
+.icon-btn:hover { color: var(--text); background: var(--hover); }
+.pin-btn.active { color: var(--accent); }
+.delete-btn:hover { color: #b8483d; background: var(--hover); }
+
+/* ---------- PARA-Badge auf der Karte ---------- */
+
+.para-badge {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.para-badge.para-projekt   { color: var(--para-projekt);   background: var(--para-projekt-bg); }
+.para-badge.para-bereich   { color: var(--para-bereich);   background: var(--para-bereich-bg); }
+.para-badge.para-ressource { color: var(--para-ressource); background: var(--para-ressource-bg); }
+.para-badge.para-archiv    { color: var(--para-archiv);    background: var(--para-archiv-bg); }
+
+/* ---------- Kernaussage (Distill) ---------- */
+
+.note-summary {
+  border-left: 2px solid var(--ai-line);
+  background: var(--ai-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ai);
+  margin-bottom: 3px;
+}
+
+.note-summary p {
+  margin: 0;
+  font-size: 0.86rem !important;
+  color: var(--text) !important;
+  line-height: 1.5;
+}
+
+/* ---------- Karten-Footer ---------- */
+
+.note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.distill-btn {
+  background: none;
+  border: none;
+  color: var(--ai);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+
+.note-card:hover .distill-btn,
+.distill-btn:focus-visible { opacity: 1; }
+.distill-btn:hover { background: var(--ai-soft); }
+.distill-btn:disabled { opacity: 0.6; cursor: default; }
+
+/* ---------- Empty state ---------- */
+
+.empty-state {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  opacity: 0.32;
+  user-select: none;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.98rem;
+  max-width: 34ch;
+}
+
+/* ---------- Composer: Bearbeiten-Banner & PARA-Auswahl ---------- */
+
+.edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.83rem;
+  font-weight: 500;
+}
+
+.edit-banner button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.83rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.para-select {
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.para-select:focus { outline: none; border-color: var(--accent); }
+
+/* ---------- Express: Frag dein Second Brain ---------- */
+
+.ask {
+  margin-top: 20px;
+}
+
+.ask-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#ask-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--ai-line);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.96rem;
+  font-family: inherit;
+  transition: border-color 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out);
+}
+
+#ask-input:focus {
+  outline: none;
+  border-color: var(--ai);
+  box-shadow: 0 0 0 3px var(--ai-soft);
+}
+
+#ask-input::placeholder { color: var(--text-faint); }
+
+.ask-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--ai);
+  color: #fff;
+  border: none;
+  padding: 11px 20px;
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.16s var(--ease-out), transform 0.1s var(--ease-out);
+}
+
+.ask-btn:hover:not(:disabled) { opacity: 0.9; }
+.ask-btn:active { transform: scale(0.98); }
+.ask-btn:disabled { opacity: 0.6; cursor: default; }
+
+.ask-answer {
+  position: relative;
+  margin-top: 12px;
+  background: var(--ai-soft);
+  border: 1px solid var(--ai-line);
+  border-radius: var(--radius-lg);
+  padding: 18px 40px 18px 20px;
+  animation: rise 0.26s var(--ease-out) both;
+}
+
+.ask-answer-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.ask-answer-body.pending { color: var(--text-muted); font-style: italic; }
+
+.ask-close {
+  position: absolute;
+  top: 10px;
   right: 10px;
   width: 26px;
   height: 26px;
@@ -430,26 +682,72 @@ button { font-family: inherit; }
   background: none;
   border: none;
   color: var(--text-faint);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   border-radius: var(--radius);
-  opacity: 0;
-  transition: color 0.15s var(--ease-out), background 0.15s var(--ease-out),
-    opacity 0.15s var(--ease-out);
+  transition: color 0.15s var(--ease-out), background 0.15s var(--ease-out);
 }
 
-.note-card:hover .delete-btn,
-.delete-btn:focus-visible { opacity: 1; }
-.delete-btn:hover { color: #b8483d; background: var(--hover); }
+.ask-close:hover { color: var(--text); background: rgba(106, 75, 188, 0.1); }
 
-/* ---------- Empty state ---------- */
+/* ---------- PARA-Filter ---------- */
 
-.empty-state {
-  margin-top: 56px;
-  text-align: center;
+.para-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.para-chip {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: filter 0.14s var(--ease-out), box-shadow 0.14s var(--ease-out);
+}
+
+.para-chip.para-projekt   { color: var(--para-projekt);   background: var(--para-projekt-bg); }
+.para-chip.para-bereich   { color: var(--para-bereich);   background: var(--para-bereich-bg); }
+.para-chip.para-ressource { color: var(--para-ressource); background: var(--para-ressource-bg); }
+.para-chip.para-archiv    { color: var(--para-archiv);    background: var(--para-archiv-bg); }
+.para-chip:hover { filter: brightness(0.97); }
+.para-chip.active { box-shadow: inset 0 0 0 1.5px currentColor; }
+
+/* ---------- Datenhoheit: Export / Import ---------- */
+
+.data-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.data-info {
+  font-size: 0.82rem;
+  color: var(--text-faint);
+}
+
+.data-actions { display: flex; gap: 8px; }
+
+.ghost-btn {
+  background: var(--surface);
   color: var(--text-muted);
-  font-size: 1rem;
+  border: 1px solid var(--border-strong);
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
 }
+
+.ghost-btn:hover { background: var(--hover); color: var(--text); }
 
 /* ---------- Focus (a11y) ---------- */
 
