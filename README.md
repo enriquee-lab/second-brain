@@ -30,6 +30,7 @@ Die App bildet den Wissens-Workflow **Capture → Organize → Distill → Expre
 - **Volltextsuche** über Titel, Inhalt, Kernaussage und Tags · **Tag- & PARA-Filter** per Klick
 - **Export & Import** als JSON – volle Datenhoheit
 - **Galerie-Ansicht** im editorialen Masonry-Layout
+- **Lebendiger Wissensgraph** als animierter Hintergrund – ein Netz verknüpfter Notizen, das die Idee des „zweiten Gehirns" sichtbar macht
 - **Lokale Speicherung** im Browser (`localStorage`) – die Daten bleiben auf deinem Gerät
 - **Responsive** und barrierearm (Fokus-Ringe, `prefers-reduced-motion`)
 
@@ -55,15 +56,16 @@ Kein Build-Schritt nötig – einfach die Datei `index.html` im Browser öffnen.
 
 ## Architektur & Entscheidungen
 
-Bewusst klein gehalten – drei Dateien, kein Framework, kein Backend:
+Bewusst klein gehalten – wenige Dateien, kein Framework, kein Backend:
 
 | Datei | Aufgabe |
 |-------|---------|
 | `index.html` | Struktur & Semantik |
 | `style.css` | Design-Tokens (CSS-Variablen) & Layout |
 | `script.js` | Zustand, Rendering, `localStorage`, KI-Aufrufe (zentraler `callGemini`-Helper) |
+| `graph-bg.js` | Eigenständiger Canvas-Wissensgraph im Hintergrund (rein dekorativ, entkoppelt von der App-Logik) |
 
-**Warum flach statt Ordnerstruktur?** Bei drei Dateien erzeugt ein `src/`-Baum
+**Warum flach statt Ordnerstruktur?** Bei so wenigen Dateien erzeugt ein `src/`-Baum
 mehr Overhead als Nutzen. Die Struktur soll dem Umfang entsprechen – nicht
 umgekehrt. Wächst das Projekt (Bearbeiten, Export/Import, Tests), ist ein
 Schnitt in `src/` und `assets/` der nächste sinnvolle Schritt.
